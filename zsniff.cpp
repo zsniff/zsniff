@@ -124,17 +124,17 @@ main(int argc, char *argv[])
                 std::vector<unsigned char> image;
                 std::cout << "zsniff processing: "<< filename << ":"<< currentoffset << std::endl;
                 error = decodeStuff(image, &buffer[currentoffset], (unsigned long)blocksize,filename);
-                currentoffset+=blocksize;
                 if (extract && image.size() > 0)  {
-                    writeExtracted(image,std::string(filename)+std::to_string(currentoffset));
+                    writeExtracted(image,std::string(filename)+std::to_string((long long)currentoffset));
                 }
+                currentoffset+=blocksize;
             } 
             if (currentoffset < buffer.size()) { // leftovers 
                 std::vector<unsigned char> image;
                 std::cout << "zsniff processing: "<< filename << ":"<< currentoffset << std::endl;
                 error = decodeStuff(image, &buffer[currentoffset], (unsigned long)buffer.size()-currentoffset,filename);
                 if (extract && image.size() > 0)  {
-                    writeExtracted(image,std::string(filename)+std::to_string(currentoffset));
+                    writeExtracted(image,std::string(filename)+std::to_string((long long)currentoffset));
                 }
             }
         } else {

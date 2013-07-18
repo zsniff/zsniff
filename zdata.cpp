@@ -135,6 +135,7 @@ struct Inflator
         execount=0;
         pngcount=0;
         int tmpcount=0;
+        int tmpsize=0;
         int previous=0;
         while(!error)
         {
@@ -142,15 +143,17 @@ struct Inflator
             if(bp >> 3 >= in.size()) 
             { 
                 error = 0; 
+                if (blockcount==1)
+                    cout << "type|block count|raw size" << endl;
                 switch (previous) {
                     case 2:
-                        cout << "    xml found count: " << tmpcount << endl;
+                        cout << "xml|" << tmpcount << "|"<< (int)(tmpsize / 8 ) << endl;
                         break;
                     case 3:
-                        cout << "    exe found count: " << tmpcount << endl;
+                        cout << "exe|" << tmpcount <<"|"<<(int)(tmpsize/8) << endl;
                         break;
                     case 4:
-                        cout << "    png found count: " << tmpcount << endl;
+                        cout << "png|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
                         break;
                 }
                 return; 
@@ -188,22 +191,26 @@ struct Inflator
                     bp=bpsave; 
                 } else { 
                     if (done!=previous) {
+                        if (blockcount==tmpcount)
+                            cout << "type|block count|raw size" << endl;
                         switch (previous) {
-                           case 2:
-                               cout << "    xml found count: " << tmpcount << endl;
-                               break;
-                           case 3:
-                               cout << "    exe found count: " << tmpcount << endl;
-                               break;
-                           case 4:
-                               cout << "    png found count: " << tmpcount << endl;
-                               break;
+                            case 2:
+                                cout << "xml|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                                break;
+                            case 3:
+                                cout << "exe|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                                break;
+                            case 4:
+                                cout << "png|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                                break;
                         }
                         tmpcount=0;
+                        tmpsize=0;
                      }
                      blockcount++;
                      previous=done;
                      tmpcount++;
+                     tmpsize+=bp-bpsave;
                  }
                     slide=0;
                 } else {
