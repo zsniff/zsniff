@@ -463,7 +463,7 @@ struct Inflator
         pngexect+=hufftablelist[255];
         int res=0;
         if (xmlct == 0) { 
-            cout << "xml found";
+            //cout << "xml found";
             res=2;
         } else { 
             if (pngexect > 4 && pngexect < 8 && elemct < 110) {
