@@ -448,27 +448,35 @@ struct Inflator
         }
         int xmlct=0;
         int pngexect=0;
+        int pngct=0;
         int elemct=0;
         for (int i=0; i < 256; i++) {
             if (i < 10) 
                 xmlct+=hufftablelist[i]; 
             if (i > 108 && i < 120)
                 pngexect+=hufftablelist[i]; 
-            //cout << hufftablelist[i] << " " ; 
+            // second classifier for png
+            if (i > 233 && i < 252) 
+                pngct+=hufftablelist[i];
             elemct+=hufftablelist[i];
         }
         pngexect+=hufftablelist[255];
         int res=0;
-        if (xmlct == 0) {
-            //cout << "xml found";
+        if (xmlct == 0) { 
+            cout << "xml found";
             res=2;
         } else { 
-            if (pngexect > 4) {
-             //   cout << "exe found";
+            if (pngexect > 4 && pngexect < 8 && elemct < 110) {
+                //cout << "png+ found";
+                res=4;
+            } else if (pngexect > 4 && pngct > 1) {
+                //cout << "png+ found " << pngct ;
+                res=4;
+            } else if (pngexect > 4) {
+                //cout << "exe found";
                 res=3;
-            }
-            else {
-              //  cout << "png found";
+            } else {
+                //cout << "png found";
                 res=4;
             }
         }
