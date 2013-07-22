@@ -150,7 +150,7 @@ struct Inflator
                         cout << "xml|" << tmpcount << "|"<< (int)(tmpsize / 8 ) << endl;
                         break;
                     case 3:
-                        cout << "exe|" << tmpcount <<"|"<<(int)(tmpsize/8) << endl;
+                        cout << "exe-emf|" << tmpcount <<"|"<<(int)(tmpsize/8) << endl;
                         break;
                     case 4:
                         cout << "png|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
@@ -198,7 +198,7 @@ struct Inflator
                                 cout << "xml|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
                                 break;
                             case 3:
-                                cout << "exe|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                                cout << "exe-emf|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
                                 break;
                             case 4:
                                 cout << "png|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
@@ -514,21 +514,21 @@ int decodeStuff(std::vector<unsigned char>& out_image, const unsigned char* in_i
             if (inflator.xmlcount==inflator.blockcount) 
                 cout << "100%"<<endl;
             else
-                cout << setprecision(2) << 100.0*(float) inflator.xmlcount / inflator.blockcount <<"%" << endl;
+                cout << setprecision(4) << 100.0 * (float) inflator.xmlcount / inflator.blockcount <<"%" << endl;
         }
         if (inflator.execount) {
-            cout << "    exe " << inflator.execount <<"/"<< inflator.blockcount<< " ";
+            cout << "exe-emf " << inflator.execount <<"/"<< inflator.blockcount<< " ";
             if (inflator.execount==inflator.blockcount) 
                 cout << "100%"<<endl;
             else 
-                cout << setprecision(2) << 100.0*(float) inflator.execount / inflator.blockcount <<"%" << endl;
+                cout << setprecision(4) << 100.0*(float) inflator.execount / inflator.blockcount <<"%" << endl;
         }
         if (inflator.pngcount) {
             cout << "    png " << inflator.pngcount <<"/"<< inflator.blockcount<< " ";
             if (inflator.pngcount==inflator.blockcount) 
                 cout << "100%"<<endl;
             else 
-            cout << setprecision(2) << 100.0*(float) inflator.pngcount / inflator.blockcount <<"%" << endl;
+                cout << setprecision(4) << 100.0*(float) inflator.pngcount / inflator.blockcount <<"%" << endl;
         }
     }
     return inflator.error;
