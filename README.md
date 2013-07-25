@@ -15,3 +15,5 @@ Files may be broken into blocks if desired using [--block bytes],however
 DEFLATE reconstruction may be affected by cut-off structures.   
 
 Decoded data will be extracted if found using [--extract].
+
+More information in the proceedings of DFRWS '13 (to appear).
