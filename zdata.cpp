@@ -135,6 +135,7 @@ struct Inflator
         execount=0;
         pngcount=0;
         int tmpcount=0;
+        int tmppos=0;
         int tmpsize=0;
         int previous=0;
         while(!error)
@@ -143,17 +144,19 @@ struct Inflator
             if(bp >> 3 >= in.size()) 
             { 
                 error = 0; 
+                if (tmppos==0)
+                   tmppos=bpsave;
                 if (blockcount==1)
-                    cout << "type|block count|raw size" << endl;
+                    cout << "offset\ttype\tblocks\traw size" << endl;
                 switch (previous) {
                     case 2:
-                        cout << "xml|" << tmpcount << "|"<< (int)(tmpsize / 8 ) << endl;
+                        cout << (int)tmppos/8 << "\txml\t" << tmpcount << "\t"<< (int)(tmpsize / 8 ) << endl;
                         break;
                     case 3:
-                        cout << "exe-emf|" << tmpcount <<"|"<<(int)(tmpsize/8) << endl;
+                        cout << (int)tmppos/8 << "\texe/emf\t" << tmpcount <<"\t"<<(int)(tmpsize/8) << endl;
                         break;
                     case 4:
-                        cout << "png|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                        cout << (int)tmppos/8 << "\tpng\t" << tmpcount << "\t"<<(int)(tmpsize/8) << endl;
                         break;
                 }
                 return; 
@@ -190,22 +193,25 @@ struct Inflator
                     error=0; // if there was an error, reset and try again.  
                     bp=bpsave; 
                 } else { 
+                    if (tmppos==0)
+                       tmppos=bpsave;
                     if (done!=previous) {
                         if (blockcount==tmpcount)
-                            cout << "type|block count|raw size" << endl;
+                            cout << "offset\ttype\tblocks\traw size" << endl;
                         switch (previous) {
                             case 2:
-                                cout << "xml|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                                cout << (int)tmppos/8<<  "\txml\t" << tmpcount << "\t"<<(int)(tmpsize/8) << endl;
                                 break;
                             case 3:
-                                cout << "exe-emf|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                                cout << (int)tmppos/8<<"\texe/emf\t" << tmpcount << "\t"<<(int)(tmpsize/8) << endl;
                                 break;
                             case 4:
-                                cout << "png|" << tmpcount << "|"<<(int)(tmpsize/8) << endl;
+                                cout << (int)tmppos/8<< "\tpng\t" << tmpcount << "\t"<<(int)(tmpsize/8) << endl;
                                 break;
                         }
                         tmpcount=0;
                         tmpsize=0;
+                        tmppos=0;
                      }
                      blockcount++;
                      previous=done;
@@ -392,7 +398,6 @@ struct Inflator
                 if(pos >= out.size()) 
                     out.resize((pos + 1) * 2); //reserve more room
                 out[pos++] = (unsigned char)(code);
-                //pos++;
             }
             else if (code >= 257 && code <= 285) //length code
             {
@@ -463,25 +468,18 @@ struct Inflator
         pngexect+=hufftablelist[255];
         int res=0;
         if (xmlct == 0) { 
-            //cout << "xml found";
             res=2;
         } else { 
             if (pngexect > 4 && pngexect < 8 && elemct < 110) {
-                //cout << "png+ found";
                 res=4;
             } else if (pngexect > 4 && pngct > 1) {
-                //cout << "png+ found " << pngct ;
                 res=4;
             } else if (pngexect > 4) {
-                //cout << "exe found";
                 res=3;
             } else {
-                //cout << "png found";
                 res=4;
             }
         }
-        //cout << ", elements " << elemct;
-        //cout << endl;
         error=0;
         return res;
     } // end inflateHuffmanBlock
@@ -517,7 +515,7 @@ int decodeStuff(std::vector<unsigned char>& out_image, const unsigned char* in_i
                 cout << setprecision(4) << 100.0 * (float) inflator.xmlcount / inflator.blockcount <<"%" << endl;
         }
         if (inflator.execount) {
-            cout << "exe-emf " << inflator.execount <<"/"<< inflator.blockcount<< " ";
+            cout << "exe/emf " << inflator.execount <<"/"<< inflator.blockcount<< " ";
             if (inflator.execount==inflator.blockcount) 
                 cout << "100%"<<endl;
             else 
