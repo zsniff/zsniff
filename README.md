@@ -16,4 +16,6 @@ DEFLATE reconstruction may be affected by cut-off structures.
 
 Decoded data will be extracted if found using [--extract].
 
-More information in the proceedings of DFRWS '13 (to appear).
+More information in the proceedings of DFRWS '13: 
+
+http://dfrws.org/2013/proceedings/DFRWS2013-8.pdf
